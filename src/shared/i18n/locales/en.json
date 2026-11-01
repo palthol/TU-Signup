@@ -67,12 +67,15 @@
       "network": "We could not reach the server. Check your connection and try again.",
       "validation": "Please review the highlighted fields and try again.",
       "signature": "A signature is required to complete the waiver.",
-      "alreadyExists": "We already have a waiver on file for this participant. Contact the front desk if you need to make changes."
+      "alreadyExists": "We already have a waiver on file for this participant. Contact the front desk if you need to make changes.",
+      "idempotency_key_conflict": "This waiver was already submitted. Please contact the gym if you need help.",
+      "server_error": "The server ran into a problem. Please try again in a few minutes."
     },
     "success": {
       "title": "Waiver submitted successfully",
       "body": "You will receive a confirmation email once the waiver is processed. Thank you for completing your submission.",
-      "nextSteps": "Please arrive 10 minutes before your session to get oriented."
+      "nextSteps": "Please arrive 10 minutes before your session to get oriented.",
+      "waiverCopyNote": "A copy of the signed waiver is available from the gym."
     },
     "details": {
       "waiverId": "Waiver Reference ID",
@@ -80,9 +83,7 @@
       "sha256": "Document SHA-256"
     },
     "actions": {
-      "new": "Submit another waiver",
-      "downloadPdf": "Download waiver PDF",
-      "downloading": "Preparing PDF…"
+      "new": "Submit another waiver"
     }
   },
   "personalInfo": {

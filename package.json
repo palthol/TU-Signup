@@ -9,7 +9,10 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/ensure-rollup-linux.mjs && tsc && vite build",
+    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "test": "node scripts/assert-no-admin-key.mjs",
+    "build": "node scripts/ensure-rollup-linux.mjs && tsc && vite build && node scripts/assert-no-admin-key.mjs",
     "preview": "vite preview"
   },
   "devDependencies": {

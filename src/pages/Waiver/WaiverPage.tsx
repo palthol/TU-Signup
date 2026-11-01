@@ -9,7 +9,6 @@ import { HouseholdReuseStep, PersonalInfoStep, MedicalInfoStep, LegalConfirmatio
 import { getStepSchema } from '../../features/waiver/schema/waiver'
 import { z } from 'zod'
 import { submitWaiver, type SubmitWaiverFieldError, type SubmitWaiverSuccess } from '../../features/waiver/api/submitWaiver'
-import { getWaiverPdf } from '../../features/waiver/api/getWaiverPdf'
 import { warmApi } from '../../features/waiver/api/client'
 import { fillSampleWaiver } from '../../features/waiver/utils/sampleWaiver'
 import { SectionCard } from '../../features/waiver/components/common/SectionCard'
@@ -75,8 +74,6 @@ export const WaiverPage: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const [submitError, setSubmitError] = React.useState<string | null>(null)
   const [submitSuccess, setSubmitSuccess] = React.useState<SubmitWaiverSuccess | null>(null)
-  const [isDownloading, setIsDownloading] = React.useState(false)
-  const [downloadError, setDownloadError] = React.useState<string | null>(null)
   const currentStepId = stepIds[index]
   const currentSchema = React.useMemo(() => getStepSchema(t, currentStepId), [t, currentStepId])
   const currentStepData = methods.watch(currentStepId as any)
@@ -224,7 +221,6 @@ export const WaiverPage: React.FC = () => {
     resetSteps()
     setSubmitSuccess(null)
     setSubmitError(null)
-    setDownloadError(null)
     setSessionResults([])
     setSessionConfig(null)
     setCurrentPersonIndex(1)
@@ -250,7 +246,6 @@ export const WaiverPage: React.FC = () => {
     setSessionResults([])
     setSubmitSuccess(null)
     setSubmitError(null)
-    setDownloadError(null)
     setHouseholdContext(null)
     setShowReuseStep(false)
     setReuseOptions(createDefaultReuseOptions(false))
@@ -263,42 +258,8 @@ export const WaiverPage: React.FC = () => {
     fillSampleWaiver(methods as unknown as Parameters<typeof fillSampleWaiver>[0])
     resetSteps()
     setSubmitError(null)
-    setDownloadError(null)
     setPrefillAppliedHint(null)
   }, [methods, resetSteps])
-
-  const handleDownloadPdf = React.useCallback(async () => {
-    if (!submitSuccess) return
-    setIsDownloading(true)
-    setDownloadError(null)
-    try {
-      const result = await getWaiverPdf(submitSuccess.waiverId)
-      if (!result.ok) {
-        const translated = result.error ? translateMessageKey(`submission.error.${result.error}`) : undefined
-        setDownloadError(translated ?? result.error ?? t('submission.error.generic'))
-        return
-      }
-
-      const blobUrl = URL.createObjectURL(result.blob)
-      const link = document.createElement('a')
-      link.href = blobUrl
-      link.download = result.fileName
-      link.rel = 'noopener'
-      document.body.appendChild(link)
-      link.click()
-      link.remove()
-      URL.revokeObjectURL(blobUrl)
-    } catch (error) {
-      if (error instanceof Error) {
-        const translated = translateMessageKey(error.message)
-        setDownloadError(translated ?? error.message)
-      } else {
-        setDownloadError(t('submission.error.generic'))
-      }
-    } finally {
-      setIsDownloading(false)
-    }
-  }, [submitSuccess, t, translateMessageKey])
 
   const handleReuseContinue = React.useCallback(() => {
     if (!householdContext) {
@@ -311,7 +272,6 @@ export const WaiverPage: React.FC = () => {
     applyReusePrefills(householdContext, reuseOptions)
     setShowReuseStep(false)
     setSubmitError(null)
-    setDownloadError(null)
   }, [applyReusePrefills, householdContext, methods, resetSteps, reuseOptions])
 
   const handleReuseBack = React.useCallback(() => {
@@ -368,7 +328,6 @@ export const WaiverPage: React.FC = () => {
               resetSteps()
               setShowReuseStep(true)
               setCurrentPersonIndex((prev) => prev + 1)
-              setDownloadError(null)
               setPrefillAppliedHint(null)
               return
             }
@@ -556,23 +515,11 @@ export const WaiverPage: React.FC = () => {
                 </div>
               )}
 
-              {downloadError && (
-                <div
-                  role="alert"
-                  className="mt-6 rounded-xl border border-brand-error/40 bg-brand-error/10 px-4 py-3 text-sm font-medium text-brand-error"
-                >
-                  {downloadError}
-                </div>
-              )}
+              <p className="mt-6 text-center text-sm text-brand-secondary">
+                {t('submission.success.waiverCopyNote')}
+              </p>
 
               <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                <Button
-                  type="button"
-                  onClick={handleDownloadPdf}
-                  disabled={isDownloading}
-                >
-                  {isDownloading ? t('submission.actions.downloading') : t('submission.actions.downloadPdf')}
-                </Button>
                 <Button
                   type="button"
                   onClick={handleStartOver}

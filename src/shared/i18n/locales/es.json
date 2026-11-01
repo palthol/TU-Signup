@@ -67,12 +67,15 @@
       "network": "No pudimos contactar al servidor. Verifica tu conexión e inténtalo nuevamente.",
       "validation": "Revisa los campos destacados e inténtalo de nuevo.",
       "signature": "Se requiere una firma para completar la exención.",
-      "alreadyExists": "Ya tenemos una exención registrada para este participante. Contacta a recepción si necesitas cambios."
+      "alreadyExists": "Ya tenemos una exención registrada para este participante. Contacta a recepción si necesitas cambios.",
+      "idempotency_key_conflict": "Esta exención ya fue enviada. Contacta al gimnasio si necesitas ayuda.",
+      "server_error": "El servidor tuvo un problema. Inténtalo de nuevo en unos minutos."
     },
     "success": {
       "title": "Exención enviada correctamente",
       "body": "Recibirás un correo de confirmación cuando la exención sea procesada. Gracias por completar tu envío.",
-      "nextSteps": "Llega 10 minutos antes de tu sesión para orientarte."
+      "nextSteps": "Llega 10 minutos antes de tu sesión para orientarte.",
+      "waiverCopyNote": "Una copia de la exención firmada está disponible en el gimnasio."
     },
     "details": {
       "waiverId": "ID de referencia de la exención",
@@ -80,9 +83,7 @@
       "sha256": "SHA-256 del documento"
     },
     "actions": {
-      "new": "Enviar otra exención",
-      "downloadPdf": "Descargar PDF de la exención",
-      "downloading": "Preparando PDF…"
+      "new": "Enviar otra exención"
     }
   },
   "personalInfo": {

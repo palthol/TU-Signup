@@ -17,8 +17,11 @@ Opens at **http://localhost:5174**. `/api` and `/health` proxy to `http://localh
 
 ```bash
 npm run build
+npm test
 npm run preview
 ```
+
+`npm test` fails the build if source or compiled assets reference a client-bundled admin credential.
 
 ## Environment
 
@@ -27,6 +30,8 @@ Copy `.env.example` to `.env.local` for local overrides.
 | Variable | Purpose |
 |----------|---------|
 | `VITE_API_BASE_URL` | API origin in production (e.g. Render). Omit locally to use the dev proxy. |
+
+Only public values may use the `VITE_` prefix. Server secrets must never be compiled into the client.
 
 ## Deploy (Vercel)
 
